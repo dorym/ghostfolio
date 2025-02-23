@@ -1,1 +1,1 @@
-export type HoldingsViewMode = 'CHART' | 'TABLE';
+export type HoldingsViewMode = 'CHART' | 'CHART2' | 'TABLE2' | 'TABLE';

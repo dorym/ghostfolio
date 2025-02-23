@@ -16,6 +16,12 @@
               <mat-button-toggle i18n-title title="Table" value="TABLE">
                 <ion-icon name="reorder-four-outline" />
               </mat-button-toggle>
+              <mat-button-toggle i18n-title title="Table" value="TABLE2">
+                <ion-icon name="reorder-four-outline" />
+              </mat-button-toggle>
+              <mat-button-toggle i18n-title title="Table" value="CHART2">
+                <ion-icon name="pie-chart-outline" />
+              </mat-button-toggle>
               <mat-button-toggle i18n-title title="Chart" value="CHART">
                 <ion-icon name="grid-outline" />
               </mat-button-toggle>
@@ -44,6 +50,39 @@
           (treemapChartClicked)="onHoldingClicked($event)"
         />
       }
+      @if (viewModeFormControl.value === 'CHART2') {
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="align-items-center d-flex text-truncate">
+              <ng-container i18n>By Holding</ng-container>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-portfolio-proportion-chart
+              class="mx-auto"
+              cursor="pointer"
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [isInPercent]="true"
+              [keys]="['symbol']"
+              [locale]="user?.settings?.locale"
+              [positions]="symbols"
+              [showLabels]="deviceType !== 'mobile'"
+              (proportionChartClicked)="onHoldingClicked($event)"
+            />
+          </mat-card-content>
+        </mat-card>
+      }
+      <div [ngClass]="{ 'd-none': viewModeFormControl.value !== 'TABLE2' }">
+        <gf-holdings-table2
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="deviceType"
+          [hasPermissionToShowQuantities]="false"
+          [holdings]="holdings"
+          [locale]="user?.settings?.locale"
+          (holdingClicked)="onHoldingClicked($event)"
+        />
+      </div>
       <div [ngClass]="{ 'd-none': viewModeFormControl.value !== 'TABLE' }">
         <gf-holdings-table
           [baseCurrency]="user?.settings?.baseCurrency"

@@ -1,6 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition,
@@ -11,6 +12,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
+import { GfHoldingsTable2Component } from '@ghostfolio/ui/holdings-table2';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 import { GfTreemapChartComponent } from '@ghostfolio/ui/treemap-chart';
 
@@ -27,8 +29,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
+import { DataSource } from '@prisma/client';
 import { addIcons } from 'ionicons';
-import { gridOutline, reorderFourOutline } from 'ionicons/icons';
+import {
+  gridOutline,
+  pieChartOutline,
+  reorderFourOutline
+} from 'ionicons/icons';
+import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -38,6 +46,7 @@ import { takeUntil } from 'rxjs/operators';
     CommonModule,
     FormsModule,
     GfHoldingsTableComponent,
+    GfHoldingsTable2Component,
     GfToggleComponent,
     GfTreemapChartComponent,
     IonIcon,
@@ -73,6 +82,15 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
+  public symbols: {
+    [name: string]: {
+      dataSource?: DataSource;
+      name: string;
+      symbol: string;
+      value: number;
+    };
+  };
+
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -81,7 +99,7 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    addIcons({ gridOutline, reorderFourOutline });
+    addIcons({ gridOutline, reorderFourOutline, pieChartOutline });
   }
 
   public ngOnInit() {
@@ -167,6 +185,22 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
     });
   }
 
+  private initiateAssetsAllocation() {
+    // take from this.holding and fill this.symbols
+    this.symbols = {};
+    for (const [_, position] of Object.entries(this.holdings)) {
+      let symbol = position.symbol;
+      this.symbols[prettifySymbol(symbol)] = {
+        dataSource: position.dataSource,
+        name: position.name,
+        symbol: prettifySymbol(symbol),
+        value: isNumber(position.valueInBaseCurrency)
+          ? position.valueInBaseCurrency
+          : position.valueInPercentage
+      };
+    }
+  }
+
   private initialize() {
     this.viewModeFormControl.disable({ emitEvent: false });
 
@@ -196,7 +230,7 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {
         this.holdings = holdings;
-
+        this.initiateAssetsAllocation();
         this.changeDetectorRef.markForCheck();
       });
   }
