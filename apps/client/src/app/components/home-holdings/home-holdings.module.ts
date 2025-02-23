@@ -1,5 +1,7 @@
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
+import { GfHoldingsTable2Component } from '@ghostfolio/ui/holdings-table2';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfTreemapChartComponent } from '@ghostfolio/ui/treemap-chart';
 
 import { CommonModule } from '@angular/common';
@@ -17,6 +19,8 @@ import { HomeHoldingsComponent } from './home-holdings.component';
     CommonModule,
     FormsModule,
     GfHoldingsTableComponent,
+    GfHoldingsTable2Component,
+    GfPortfolioProportionChartComponent,
     GfToggleModule,
     GfTreemapChartComponent,
     MatButtonModule,
