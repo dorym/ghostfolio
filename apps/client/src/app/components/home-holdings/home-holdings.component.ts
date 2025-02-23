@@ -1,6 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition,
@@ -13,6 +14,8 @@ import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DataSource } from '@prisma/client';
+import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -42,6 +45,15 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   );
 
   private unsubscribeSubject = new Subject<void>();
+
+  public symbols: {
+    [name: string]: {
+      dataSource?: DataSource;
+      name: string;
+      symbol: string;
+      value: number;
+    };
+  };
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -135,6 +147,22 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     });
   }
 
+  private initiateAssetsAllocation() {
+    // take from this.holding and fill this.symbols
+    this.symbols = {};
+    for (const [_, position] of Object.entries(this.holdings)) {
+      let symbol = position.symbol;
+      this.symbols[prettifySymbol(symbol)] = {
+        dataSource: position.dataSource,
+        name: position.name,
+        symbol: prettifySymbol(symbol),
+        value: isNumber(position.valueInBaseCurrency)
+          ? position.valueInBaseCurrency
+          : position.valueInPercentage
+      };
+    }
+  }
+
   private initialize() {
     this.viewModeFormControl.disable({ emitEvent: false });
 
@@ -164,7 +192,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {
         this.holdings = holdings;
-
+        this.initiateAssetsAllocation();
         this.changeDetectorRef.markForCheck();
       });
   }
