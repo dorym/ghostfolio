@@ -3,6 +3,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration/conf
 import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.module';
 import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
 import { CoinGeckoService } from '@ghostfolio/api/services/data-provider/coingecko/coingecko.service';
+import { CustomProviderService } from '@ghostfolio/api/services/data-provider/custom-provider/custom-provider.service';
 import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider/eod-historical-data/eod-historical-data.service';
 import { FinancialModelingPrepService } from '@ghostfolio/api/services/data-provider/financial-modeling-prep/financial-modeling-prep.service';
 import { GhostfolioService } from '@ghostfolio/api/services/data-provider/ghostfolio/ghostfolio.service';
@@ -43,6 +44,7 @@ import { DataProviderService } from './data-provider.service';
     ManualService,
     RapidApiService,
     YahooFinanceService,
+    CustomProviderService,
     {
       inject: [
         AlphaVantageService,
@@ -53,7 +55,8 @@ import { DataProviderService } from './data-provider.service';
         GoogleSheetsService,
         ManualService,
         RapidApiService,
-        YahooFinanceService
+        YahooFinanceService,
+        CustomProviderService
       ],
       provide: 'DataProviderInterfaces',
       useFactory: (
@@ -65,7 +68,8 @@ import { DataProviderService } from './data-provider.service';
         googleSheetsService,
         manualService,
         rapidApiService,
-        yahooFinanceService
+        yahooFinanceService,
+        CustomProviderService
       ) => [
         alphaVantageService,
         coinGeckoService,
@@ -75,7 +79,8 @@ import { DataProviderService } from './data-provider.service';
         googleSheetsService,
         manualService,
         rapidApiService,
-        yahooFinanceService
+        yahooFinanceService,
+        CustomProviderService
       ]
     },
     YahooFinanceDataEnhancerService
