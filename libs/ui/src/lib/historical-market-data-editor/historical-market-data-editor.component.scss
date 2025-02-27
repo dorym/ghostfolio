@@ -9,8 +9,10 @@
 
   .day {
     height: 0.5rem;
-    margin-right: 0.25rem;
-    width: 0.5rem;
+    margin-right: 0.35rem;
+    width: 0.8rem;
+    font-size: 0.6rem;
+    line-height: 0.5rem;
 
     &:hover {
       opacity: 0.8;
@@ -26,6 +28,10 @@
 
     &.today {
       background-color: rgba(var(--palette-accent-500), 1);
+    }
+
+    &:not(.valid):not(.available):not(.today) {
+      color: transparent;
     }
   }
 }
