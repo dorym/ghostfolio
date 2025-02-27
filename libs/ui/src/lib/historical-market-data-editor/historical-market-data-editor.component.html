@@ -19,8 +19,9 @@
               )
             }"
             [title]="
-              (itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
-                | date: defaultDateFormat) ?? ''
+              marketDataByMonth[itemByMonth.key][
+                i + 1 < 10 ? '0' + (i + 1) : i + 1
+              ]?.marketPrice?.toFixed(2) ?? ''
             "
             (click)="
               onOpenMarketDataDetail({
@@ -28,7 +29,9 @@
                 yearMonth: itemByMonth.key
               })
             "
-          ></div>
+          >
+            {{ i + 1 }}
+          </div>
         }
       </div>
     </div>
