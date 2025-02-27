@@ -303,6 +303,7 @@ enum DataSource {
   MANUAL
   RAPID_API
   YAHOO
+  CUSTOMPROVIDER
 }
 
 enum MarketDataState {
