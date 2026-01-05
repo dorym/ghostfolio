@@ -871,7 +871,7 @@
         <target state="translated">Ups! Nie udało się sparsować danych historycznych.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor.component.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1102717806459547726" datatype="html">
