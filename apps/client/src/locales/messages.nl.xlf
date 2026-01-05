@@ -5688,7 +5688,7 @@
         <target state="translated">Oeps! Ophalen van historische data is mislukt.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor.component.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="297546430113071258" datatype="html">

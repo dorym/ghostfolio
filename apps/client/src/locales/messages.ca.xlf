@@ -1015,7 +1015,7 @@
         <target state="translated">Oooh! No s’han pogut recopilar les dades históriques.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor.component.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4405333887341433096" datatype="html">
