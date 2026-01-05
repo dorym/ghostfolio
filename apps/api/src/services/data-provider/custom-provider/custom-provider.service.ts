@@ -1,4 +1,4 @@
-// import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
+import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import {
   DataProviderInterface,
   GetDividendsParams,
@@ -6,15 +6,10 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-// import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
-// import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   // LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
@@ -22,19 +17,9 @@ import {
 import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 
-// import { addDays, format, isSameDay } from 'date-fns';
-// import yahooFinance from 'yahoo-finance2';
-// import { ChartResultArray } from 'yahoo-finance2/dist/esm/src/modules/chart';
-// import {
-//   HistoricalDividendsResult,
-//   HistoricalHistoryResult
-// } from 'yahoo-finance2/dist/esm/src/modules/historical';
-// import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
-
 @Injectable()
 export class CustomProviderService implements DataProviderInterface {
   public constructor(
-    // private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService,
     private readonly yahooFinanceService: YahooFinanceService
   ) {}
 
@@ -79,7 +64,7 @@ export class CustomProviderService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     let augmented = await this.getHistoricalYahooAugmented({
       from,
@@ -101,7 +86,7 @@ export class CustomProviderService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
     return this.yahooFinanceService.getQuotes({ symbols }).then((responses) => {
       return Object.fromEntries(
         Object.entries(responses).map(([symbol, response]) => [
@@ -155,7 +140,7 @@ export class CustomProviderService implements DataProviderInterface {
     to
   }: GetHistoricalParams): Promise<
     | {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
       }
     | false
   > {
@@ -191,39 +176,4 @@ export class CustomProviderService implements DataProviderInterface {
     return false;
   }
 
-  // private convertToDividendResult(
-  //   result: ChartResultArray
-  // ): HistoricalDividendsResult {
-  //   return result.events.dividends.map(({ amount: dividends, date }) => {
-  //     return { date, dividends };
-  //   });
-  // }
-
-  // private convertToHistoricalResult(
-  //   result: ChartResultArray
-  // ): HistoricalHistoryResult {
-  //   return result.quotes;
-  // }
-
-  // private async getQuotesWithQuoteSummary(aYahooFinanceSymbols: string[]) {
-  //   const quoteSummaryPromises = aYahooFinanceSymbols.map((symbol) => {
-  //     return yahooFinance.quoteSummary(symbol).catch(() => {
-  //       Logger.error(
-  //         `Could not get quote summary for ${symbol}`,
-  //         'YahooFinanceService'
-  //       );
-  //       return null;
-  //     });
-  //   });
-
-  //   const quoteSummaryItems = await Promise.all(quoteSummaryPromises);
-
-  //   return quoteSummaryItems
-  //     .filter((item) => {
-  //       return item !== null;
-  //     })
-  //     .map(({ price }) => {
-  //       return price;
-  //     });
-  // }
 }

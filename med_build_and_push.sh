@@ -6,7 +6,7 @@ set -e
 
 USERNAME="$1"
 IMAGE_NAME="$USERNAME/ghostfolio"
-TAG="2.200.0-med"
+TAG="2.228.0-med"
 
 if [ -z "$USERNAME" ]; then
 	echo "Usage: $0 <docker_user>"
